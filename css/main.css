@@ -1,0 +1,48 @@
+/* CSS file placeholder. */
+.mzh-btn {
+    display: block;
+    color: #698ebf;
+    height: 24px;
+    line-height: 24px;
+    width: 38px;
+    border-radius: 3px;
+    border: 0;
+    cursor: pointer;
+    background: #eff6fa;
+    font-weight: 700;
+    font-weight: 500;
+    position: relative;
+    margin-top: 5px;
+}
+
+.mzh-hide .zm-item-link-avatar{
+    display: none;
+}
+.mzh-hide .zm-comment-hd {
+    display: none;
+}
+
+.mzh-fixbar .zg-bull {
+    display: none;
+}
+
+.mzh-fixbar .meta-item[name='favo'] {
+    float: right;
+}
+
+.mzh-text-fold {
+    height: 8.5em;
+    overflow: hidden;
+}
+
+.mzh-fix-sidebar .zm-side-section {
+    display: none;
+}
+
+.mzh-fix-sidebar .zm-side-section:first-child {
+    display: block;
+}
+
+.mzh-fix-sidebar .zh-question-followers-sidebar {
+    display: none;
+}

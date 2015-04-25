@@ -1,0 +1,25 @@
+body {
+    font-size: 18px;
+}
+.field-item {
+    line-height: 2;
+    font-size: 16px;
+}
+
+.tips {
+    margin-left: 10px;
+    font-size: 12px;
+    color: #8E8E8E;
+}
+#save {
+    font-size: 18px;
+    width: 100px;
+    background: #ccc;
+}
+
+.btn-wrap {
+    margin-top: 20px;
+}
+input {
+    font-size: 16px;
+}

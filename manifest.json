@@ -1,0 +1,38 @@
+{
+    "manifest_version": 2,
+    "name": "myzhihu: 知乎修改器",
+    "short_name": "myzhihu",
+    "description": "知乎助手",
+    "version": "0.0.4",
+    "minimum_chrome_version": "38",
+    "browser_action": {
+        "default_icon": "assets/icon_16.png",
+        "default_title": "myzhihu",
+        "default_popup": "html/popup.html"
+    },
+    "icons": {
+        "16": "assets/icon_16.png",
+        "128": "assets/icon_128.png"
+    },
+    "content_scripts": [{
+        "matches": ["http://*.zhihu.com/*"],
+        "css": ["css/main.css"],
+        "all_frames": true,
+        "js": ["lib/jquery.js",
+            "js/main.js"
+        ]
+    }],
+    "background": {
+        "scripts": ["js/background.js"]
+    },
+
+    "options_page": "html/options.html",
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+    "permissions": [
+        "contextMenus",
+        "storage",
+        "notifications",
+        "<all_urls>"
+    ]
+}
