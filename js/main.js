@@ -167,10 +167,45 @@ $(function() {
         }
     }
 
+    // 图片缩小3倍
+    function minImages() {
+        var $imgs = $('.origin_image, .content_image');
+
+        if (!$imgs.length) {
+            return;
+        }
+
+        $imgs.each(function () {
+            var $img = $(this);
+            var origin_style = {
+                width: $img.width(),
+                height: $img.height()
+            };
+            var min_style = {
+                width: origin_style.width / 3,
+                height: origin_style.height / 3,
+                cursor: 'pointer'
+            };
+
+            $img.css(min_style).click(function () {
+                var $this = $(this);
+
+                if ($this.hasClass('minsize')) {
+                    $this.removeClass('minsize');
+                    $this.css(origin_style);
+                } else {
+                    $this.addClass('minsize');
+                    $this.css(min_style);
+                }
+            });
+        });
+    }
+
     function init() {
         fixAnswer();
         hideUserInfo();
         fixPage();
+        minImages();
 
         bindEvents();
     }
