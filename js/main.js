@@ -1,7 +1,12 @@
 $(function() {
-    var CONST = {
+    'use strict'
+    const CONF = {
         FOLD: '收起',
-        UNFOLD: '展开'
+        UNFOLD: '展开',
+        NOIMG: '无图',
+        HASIMG: '有图',
+        SHOWIMG: '显示图片',
+        HIDEIMG: '隐藏图片'
     };
 
     var options = {
@@ -22,44 +27,112 @@ $(function() {
                 return;
             }
 
-            var $answer = $this.closest('.zm-item-answer');
-
-            if ($answer.height() < options.maxHeight) {
+            if ($this.closest('.zm-item-answer').height() < options.maxHeight) {
                 return;
             }
 
-            var aid = $answer.data('aid');
-            var $btn = $('<button class="mzh-btn mzh-btn-cls">' + CONST.FOLD + '</button>').data('aid', aid);
-
-            $this.append($btn);
-
+            var btnBar = new BtnBar($this);
         });
     }
 
-    function btnToggle(elem) {
-        var $elem = $(elem);
-        var aid = $elem.data('aid');
-        var $answer = $('.zm-item-answer[data-aid=' + aid + ']');
-        var $text = $answer.find('.zm-item-rich-text');
+    class BtnBar {
+        constructor($bar) {
+            this.$bar = $bar;
+            this.$answer = $bar.closest('.zm-item-answer');
+            this.$text = this.$answer.find('.zm-item-rich-text');
+            this.$imgs = this.$answer.find('img.origin_image');
+            this.aid = this.$answer.data('aid');
+            this.init();
+        }
 
-        // 暂时只能直接隐藏掉，直接设置text高度会与知乎本身的功能起冲突
-        // 可以考虑新生成一个summary放到text原本的位置
-        if ($text.css('display') === 'none') {
-            $text.show();
-            $elem.text(CONST.FOLD);
-        } else {
-            $text.hide();
-            $elem.text(CONST.UNFOLD);
+        init() {
+            this.createBtns();
+            this.bindEvents();
+        }
 
-            // 自动滚到下一个答案
-            setTimeout(function() {
-                var scrollToY = $answer.next().offset().top - toolbarH;
+        createBtns() {
+            this.$foldBtn = $('<button class="mzh-btn mzh-btn-fold">' + CONF.FOLD + '</button>');
+            this.$bar.append(this.$foldBtn);
 
-                window.scrollTo(0, scrollToY);
-            }, 0);
+            if (!this.$imgs.length) {
+                return;
+            }
+
+            this.$imgBtn = $('<button class="mzh-btn mzh-btn-hasimg">' + CONF.HASIMG + '</button>');
+            this.$bar.append(this.$imgBtn);
+            this.refreshImgs(false);
+        }
+
+        bindEvents() {
+            this.$bar.on('click', '.mzh-btn-fold', this.refreshAnswer.bind(this));
+            this.$bar.on('click', '.mzh-btn-hasimg', this.refreshImgs.bind(this, true));
+            this.$bar.on('click', '.mzh-btn-noimg', this.refreshImgs.bind(this, false));
+            this.$answer.on('click', '.mzh-btn-showimg', this.showImg);
+        }
+
+        refreshAnswer() {
+            if (!this.$text.is(':visible')) {
+                this.$text.show();
+                this.$foldBtn.text(CONF.FOLD);
+            } else {
+                this.$text.hide();
+                this.$foldBtn.text(CONF.UNFOLD);
+
+                requestAnimationFrame(() => {
+                    var scrollToY = this.$answer.next().offset().top - toolbarH;
+
+                    window.scrollTo(0, scrollToY);
+                });
+            }
+        }
+
+        initImgs() {
+            var self = this;
+
+            this.$imgs.each(function () {
+                var $img = $(this);
+                $('<button class="mzh-btn-showimg" style="display:none">' + CONF.SHOWIMG + '</button>').insertBefore($img);
+            });
+            this.isImgsInit = true;                  
+        }
+
+        refreshImgs(hasImg) {
+            if (hasImg) {
+                this.$imgBtn.text(CONF.NOIMG).removeClass('mzh-btn-hasimg').addClass('mzh-btn-noimg');
+                this.$imgs.show().each(function () {
+                    var $img = $(this);
+                    $img.attr('src', $img.data('original'));
+                });
+
+                this.$answer.find('.mzh-btn-showimg').hide();
+                return;
+            }
+
+            if (!this.isImgsInit) {
+                this.initImgs();
+            }
+
+            this.$answer.find('.mzh-btn-showimg').show();
+            this.$imgs.hide();
+            this.$imgBtn.text(CONF.HASIMG).removeClass('mzh-btn-noimg').addClass('mzh-btn-hasimg');
+        }
+
+        showImg() {
+            var $img = $(this).next('img');
+            var $btn = $(this);
+
+            if (!$img.is(':visible')) {
+                $img.show();
+                $img.attr('src', $img.data('original'));
+                $btn.text(CONF.HIDEIMG);
+
+                return;
+            }
+
+            $img.hide();
+            $btn.text(CONF.SHOWIMG);
         }
     }
-
 
     function bindEvents() {
         // 折叠区展开后添加按钮
@@ -70,10 +143,6 @@ $(function() {
         $('#zh-question-answer-wrap, #zh-question-collapsed-wrap').on('DOMSubtreeModified', function () {
             fixAnswer();
             hideUserInfo();
-        });
-
-        $(document).on('click', '.mzh-btn-cls', function() {
-            btnToggle(this);
         });
 
         $(document).on('click', '.zh-summary', function() {
@@ -99,7 +168,7 @@ $(function() {
         }
 
         if (options.hideupdown) {
-            $answer.find('.zm-votebar').find('.up,.down').hide();
+            $answer.find('.zm-votebar').find('.up,.down').css('visibility', 'hidden');
         }
 
         if (options.fixbar) {
@@ -167,50 +236,14 @@ $(function() {
         }
     }
 
-    // 图片缩小3倍
-    function minImages() {
-        var $imgs = $('.origin_image, .content_image');
-
-        if (!$imgs.length) {
-            return;
-        }
-
-        $imgs.each(function () {
-            var $img = $(this);
-            var origin_style = {
-                width: $img.width(),
-                height: $img.height()
-            };
-            var min_style = {
-                width: origin_style.width / 3,
-                height: origin_style.height / 3,
-                cursor: 'pointer'
-            };
-
-            $img.css(min_style).click(function () {
-                var $this = $(this);
-
-                if ($this.hasClass('minsize')) {
-                    $this.removeClass('minsize');
-                    $this.css(origin_style);
-                } else {
-                    $this.addClass('minsize');
-                    $this.css(min_style);
-                }
-            });
-        });
-    }
-
     function init() {
         fixAnswer();
         hideUserInfo();
         fixPage();
-        minImages();
-
         bindEvents();
     }
 
-    chrome.storage.sync.get('options', function(data) {
+    chrome.storage.local.get('options', function(data) {
         options = $.extend(options, data.options);
         init();
     });

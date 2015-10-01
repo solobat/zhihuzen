@@ -12,7 +12,7 @@ $(function() {
             hideSidebar: false,
             fixbar: false
         };
-        chrome.storage.sync.get('options', function(data) {
+        chrome.storage.local.get('options', function(data) {
             $.extend(options, data.options);
 
             for (var key in options) {
@@ -48,7 +48,7 @@ $(function() {
     }
 
     function save(data) {
-        chrome.storage.sync.set({
+        chrome.storage.local.set({
             options: data
 
         }, function() {

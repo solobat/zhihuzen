@@ -3,7 +3,7 @@
     "name": "myzhihu: 知乎修改器",
     "short_name": "myzhihu",
     "description": "知乎助手",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "minimum_chrome_version": "38",
     "browser_action": {
         "default_icon": "assets/icon_16.png",
@@ -19,6 +19,7 @@
         "css": ["css/main.css"],
         "all_frames": true,
         "js": ["lib/jquery.js",
+            "js/utils.js",
             "js/main.js"
         ]
     }],
