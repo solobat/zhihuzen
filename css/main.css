@@ -1,48 +1,37 @@
 /* CSS file placeholder. */
-.mzh-btn {
-    display: block;
-    color: #698ebf;
-    height: 24px;
-    line-height: 24px;
-    width: 38px;
-    border-radius: 3px;
-    border: 0;
-    cursor: pointer;
-    background: #eff6fa;
-    font-weight: 700;
-    font-weight: 500;
-    position: relative;
-    margin-top: 5px;
+
+/* hide name */
+.mzh-hidename .feed-item .avatar,
+.mzh-hidename .feed-item .source,
+.mzh-hidename .feed-item .zm-item-answer-author-wrap,
+.mzh-hidename .feed-item .zm-item-answer-author-info,
+.mzh-hidename .feed-item .feed-source {
+    display: none!important;
 }
 
-.mzh-hide .zm-item-link-avatar{
-    display: none;
-}
-.mzh-hide .zm-comment-hd {
-    display: none;
-}
-
-.mzh-fixbar .zg-bull {
-    display: none;
+.mzh-hidename .zm-item-answer .answer-head,
+.mzh-hidename .zm-item-answer .zm-item-link-avatar,
+.mzh-hidename .zm-item-answer .zm-comment-hd {
+    display: none!important;
 }
 
-.mzh-fixbar .meta-item[name='favo'] {
-    float: right;
+/* hide up down */
+.mzh-hideupdown .feed-item .zm-item-vote,
+.mzh-hideupdown .feed-item .zm-votebar {
+    display: none!important;
 }
 
-.mzh-text-fold {
-    height: 8.5em;
-    overflow: hidden;
+.mzh-hideupdown .zm-item-answer .zm-votebar .up,
+.mzh-hideupdown .zm-item-answer .zm-votebar .down {
+    visibility: hidden!important;
 }
 
-.mzh-fix-sidebar .zm-side-section {
-    display: none;
+/* hide sidebar */
+.mzh-hideSidebar .zu-main-sidebar {
+    display: none!important;
 }
 
-.mzh-fix-sidebar .zm-side-section:first-child {
-    display: block;
-}
-
-.mzh-fix-sidebar .zh-question-followers-sidebar {
-    display: none;
+/* hide comments */
+.mzh-hideComments .toggle-comment {
+    display: none!important;    
 }

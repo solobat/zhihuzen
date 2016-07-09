@@ -7,10 +7,11 @@ $(function() {
     function init() {
         var options = {
             maxHeight: 250,
-            hidename: false,
-            hideupdown: false,
-            hideSidebar: false,
-            fixbar: false
+            hidename: true,
+            hideupdown: true,
+            hideSidebar: true,
+            hideComments: true,
+            sortByCreated: true
         };
         chrome.storage.local.get('options', function(data) {
             $.extend(options, data.options);
@@ -34,14 +35,16 @@ $(function() {
     function onSaveClick() {
         var hidename = $('#hidename').get(0).checked;
         var hideupdown = $('#hideupdown').get(0).checked;
-        var fixbar = $('#fixbar').get(0).checked;
+        var hideComments = $('#hideComments').get(0).checked;
         var hideSidebar = $('#hideSidebar').get(0).checked;
+        var sortByCreated = $('#hideComments').get(0).checked;
 
         var data = {
             hidename: hidename,
             hideupdown: hideupdown,
             hideSidebar: hideSidebar,
-            fixbar: fixbar
+            hideComments: hideComments,
+            sortByCreated: sortByCreated
         };
 
         save(data);
