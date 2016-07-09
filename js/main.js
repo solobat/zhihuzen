@@ -20,129 +20,10 @@ $(function() {
     // toolbar height
     var toolbarH = $('.zu-top').height();
 
-    function fixAnswer() {
-        $('.zm-votebar').each(function() {
-            var $this = $(this);
-            if ($this.find('.mzh-btn').length) {
-                return;
-            }
-
-            if ($this.closest('.zm-item-answer').height() < options.maxHeight) {
-                return;
-            }
-
-            var btnBar = new BtnBar($this);
-        });
-    }
-
-    class BtnBar {
-        constructor($bar) {
-            this.$bar = $bar;
-            this.$answer = $bar.closest('.zm-item-answer');
-            this.$text = this.$answer.find('.zm-item-rich-text');
-            this.$imgs = this.$answer.find('img.origin_image');
-            this.aid = this.$answer.data('aid');
-            this.init();
-        }
-
-        init() {
-            this.createBtns();
-            this.bindEvents();
-        }
-
-        createBtns() {
-            this.$foldBtn = $('<button class="mzh-btn mzh-btn-fold">' + CONF.FOLD + '</button>');
-            this.$bar.append(this.$foldBtn);
-
-            if (!this.$imgs.length) {
-                return;
-            }
-
-            this.$imgBtn = $('<button class="mzh-btn mzh-btn-hasimg">' + CONF.HASIMG + '</button>');
-            this.$bar.append(this.$imgBtn);
-            this.refreshImgs(false);
-        }
-
-        bindEvents() {
-            this.$bar.on('click', '.mzh-btn-fold', this.refreshAnswer.bind(this));
-            this.$bar.on('click', '.mzh-btn-hasimg', this.refreshImgs.bind(this, true));
-            this.$bar.on('click', '.mzh-btn-noimg', this.refreshImgs.bind(this, false));
-            this.$answer.on('click', '.mzh-btn-showimg', this.showImg);
-        }
-
-        refreshAnswer() {
-            if (!this.$text.is(':visible')) {
-                this.$text.show();
-                this.$foldBtn.text(CONF.FOLD);
-            } else {
-                this.$text.hide();
-                this.$foldBtn.text(CONF.UNFOLD);
-
-                requestAnimationFrame(() => {
-                    var scrollToY = this.$answer.next().offset().top - toolbarH;
-
-                    window.scrollTo(0, scrollToY);
-                });
-            }
-        }
-
-        initImgs() {
-            var self = this;
-
-            this.$imgs.each(function () {
-                var $img = $(this);
-                $('<button class="mzh-btn-showimg" style="display:none">' + CONF.SHOWIMG + '</button>').insertBefore($img);
-            });
-            this.isImgsInit = true;                  
-        }
-
-        refreshImgs(hasImg) {
-            if (hasImg) {
-                this.$imgBtn.text(CONF.NOIMG).removeClass('mzh-btn-hasimg').addClass('mzh-btn-noimg');
-                this.$imgs.show().each(function () {
-                    var $img = $(this);
-                    $img.attr('src', $img.data('original'));
-                });
-
-                this.$answer.find('.mzh-btn-showimg').hide();
-                return;
-            }
-
-            if (!this.isImgsInit) {
-                this.initImgs();
-            }
-
-            this.$answer.find('.mzh-btn-showimg').show();
-            this.$imgs.hide();
-            this.$imgBtn.text(CONF.HASIMG).removeClass('mzh-btn-noimg').addClass('mzh-btn-hasimg');
-        }
-
-        showImg() {
-            var $img = $(this).next('img');
-            var $btn = $(this);
-
-            if (!$img.is(':visible')) {
-                $img.show();
-                $img.attr('src', $img.data('original'));
-                $btn.text(CONF.HIDEIMG);
-
-                return;
-            }
-
-            $img.hide();
-            $btn.text(CONF.SHOWIMG);
-        }
-    }
-
     function bindEvents() {
-        // 折叠区展开后添加按钮
-        $('#zh-question-collapsed-link').on('click', function() {
-            fixAnswer();
-        });
-
         $('#zh-question-answer-wrap, #zh-question-collapsed-wrap').on('DOMSubtreeModified', function () {
-            fixAnswer();
             hideUserInfo();
+            modifyAnswerLinks()
         });
 
         $(document).on('click', '.zh-summary', function() {
@@ -151,6 +32,7 @@ $(function() {
 
         $('#js-home-feed-list').on('DOMSubtreeModified', function () {
             hideOnIndex();
+            modifyAnswerLinks()
         });
     }
 
@@ -202,6 +84,8 @@ $(function() {
             $feed.find('.avatar').remove();
             $feed.find('.source').remove();
             $feed.find('.zm-item-answer-author-wrap').remove();
+            $feed.find('.zm-item-answer-author-info').remove();
+            $feed.find('.feed-source').remove();
         }
 
         if (options.hideupdown) {
@@ -230,6 +114,16 @@ $(function() {
         hideOnIndex();
     }
 
+    function modifyAnswerLinks() {
+        $('a.question_link:not(.mzh)').each(function() {
+            let $link = $(this)
+            let linkArr = $link.attr('href').split('#')
+            let newLink = linkArr[0] + '?sort=created#' + (linkArr[1] || '')
+
+            $link.attr('href', newLink).addClass('mzh')
+        });
+    }
+
     function fixPage() {
         if (options.hideSidebar) {
             $('.zu-main-sidebar').addClass('mzh-fix-sidebar');
@@ -237,10 +131,10 @@ $(function() {
     }
 
     function init() {
-        fixAnswer();
-        hideUserInfo();
-        fixPage();
-        bindEvents();
+        hideUserInfo()
+        modifyAnswerLinks()
+        fixPage()
+        bindEvents()
     }
 
     chrome.storage.local.get('options', function(data) {
