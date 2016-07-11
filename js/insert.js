@@ -39,6 +39,7 @@ function initMyZhihu() {
     $(() => {
         if (options.sortByCreated) {
             modifyAnswerLinks()
+            $('#js-home-feed-list').on('DOMSubtreeModified', () => { modifyAnswerLinks() })
         }
     })
 }
@@ -49,6 +50,6 @@ function modifyAnswerLinks() {
         let linkArr = $link.attr('href').split('#')
         let newLink = linkArr[0] + '?sort=created#' + (linkArr[1] || '')
 
-        $link.attr('href', newLink);
+        $link.attr('href', newLink).addClass('mzh')
     });
 }
