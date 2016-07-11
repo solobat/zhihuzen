@@ -37,7 +37,7 @@ $(function() {
         var hideupdown = $('#hideupdown').get(0).checked;
         var hideComments = $('#hideComments').get(0).checked;
         var hideSidebar = $('#hideSidebar').get(0).checked;
-        var sortByCreated = $('#hideComments').get(0).checked;
+        var sortByCreated = $('#sortByCreated').get(0).checked;
 
         var data = {
             hidename: hidename,

@@ -16,6 +16,7 @@
 }
 
 /* hide up down */
+.mzh-hideupdown .zm-votebar,
 .mzh-hideupdown .feed-item .zm-item-vote,
 .mzh-hideupdown .feed-item .zm-votebar {
     display: none!important;
@@ -33,5 +34,5 @@
 
 /* hide comments */
 .mzh-hideComments .toggle-comment {
-    display: none!important;    
+    display: none!important;
 }
