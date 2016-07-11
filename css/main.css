@@ -5,7 +5,9 @@
 .mzh-hidename .feed-item .source,
 .mzh-hidename .feed-item .zm-item-answer-author-wrap,
 .mzh-hidename .feed-item .zm-item-answer-author-info,
-.mzh-hidename .feed-item .feed-source {
+.mzh-hidename .feed-item .feed-source,
+.mzh-hidename .comment-app-holder .Avatar,
+.mzh-hidename .comment-app-holder div[class^="_CommentItem_header"] {
     display: none!important;
 }
 
@@ -18,7 +20,9 @@
 /* hide up down */
 .mzh-hideupdown .zm-votebar,
 .mzh-hideupdown .feed-item .zm-item-vote,
-.mzh-hideupdown .feed-item .zm-votebar {
+.mzh-hideupdown .feed-item .zm-votebar,
+.mzh-hideupdown .comment-app-holder span[class^="_CommentItem_likes"],
+.mzh-hideupdown .comment-app-holder button[class^="_CommentItem_action"] {
     display: none!important;
 }
 
