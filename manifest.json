@@ -3,7 +3,7 @@
     "name": "知乎Zen",
     "short_name": "知乎zen",
     "description": "知乎助手",
-    "version": "1.5.3",
+    "version": "1.6",
     "minimum_chrome_version": "38",
     "browser_action": {
         "default_icon": "assets/icon_16.png",
@@ -15,7 +15,11 @@
         "128": "assets/icon_128.png"
     },
     "web_accessible_resources": [
-        "css/main.css"
+        "css/main.css",
+        "assets/iconfont.eot",
+        "assets/iconfont.svg",
+        "assets/iconfont.ttf",
+        "assets/iconfont.woff"
     ],
     "content_scripts": [{
         "matches": ["https://*.zhihu.com/*"],
@@ -24,6 +28,7 @@
         "run_at": "document_start",
         "js": [
             "lib/jquery.js",
+            "lib/swipe.js",
             "js/insert.js"
         ]
     }],

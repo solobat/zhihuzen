@@ -40,3 +40,93 @@
 .mzh-hideComments .toggle-comment {
     display: none!important;
 }
+
+.mzh-slider-btn {
+    position: fixed;
+    z-index: 100;
+    right: 50px;
+    top: 100px;
+    padding: 4px;
+    background: rgba(0, 0, 0, .6);
+    cursor: pointer;
+    color: #fff;
+}
+
+.mzh-slider-box {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10001;
+    background: rgba(0, 0, 0, .85);
+    width: 100%;
+    height: 100%;
+}
+
+.mzh-swipe {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.mzh-swipe-wrap {
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+}
+
+.mzh-swipe-wrap > div {
+    float: left;
+    width:100%;
+    height: 100%;
+    position: relative;
+}
+
+.mzh-answer-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mzh-answer-content {
+    padding: 12px;
+    background: #fff;
+    width: 60%;
+    height: 80%;
+    overflow-x: auto;
+}
+
+.mzh-slider-close-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+    font-size: 20px;
+}
+
+.mzh-slider-nav-prev,
+.mzh-slider-nav-next {
+    position: absolute;
+    top: 45%;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    color: #fff;
+}
+
+.mzh-slider-nav-prev {
+    left: 100px;
+}
+
+.mzh-slider-nav-next {
+    right: 100px;
+}
