@@ -1,3 +1,4 @@
+
 function appendStyleNode(id, href) {
     var cssNode = document.createElement('link')
     cssNode.type = 'text/css'
@@ -18,8 +19,9 @@ var options = {
     hideSidebar: true,
     hideComments: true,
     sortByCreated: true,
-    showSliderButton: true
-};
+    showSliderButton: true,
+    autoSlider: false
+}
 
 chrome.storage.local.get('options', (data) => {
     options = Object.assign(options, data.options)
@@ -40,7 +42,7 @@ function initMyZhihu() {
     $(() => {
         if (options.sortByCreated) {
             modifyAnswerLinks()
-            $('#js-home-feed-list').on('DOMSubtreeModified', () => { modifyAnswerLinks() })
+            $('#js-home-feed-list,[data-type=daily]').on('DOMSubtreeModified', () => { modifyAnswerLinks() })
         }
 
         if (options.showSliderButton && window.location.href.indexOf('/question') !== -1) {
@@ -71,6 +73,10 @@ function insertSlider() {
     $swipe.find('.mzh-slider-close-btn').on('click', removeSlider)
 
     $('body').append($btn).append($swipe)
+
+    if (options.autoSlider) {
+        setTimeout(showSlider, 200)
+    }
 }
 
 let sliderTemplate = function(items) {
@@ -83,14 +89,47 @@ let sliderTemplate = function(items) {
     })
 };
 
-let swipe = null;
+let swipe = null
+
+const PAGE_SIZE = 20
 
 function slide() {
     if (!swipe) {
         return;
     }
 
-    swipe[$(this).data('type')]();
+    if (PAGE_SIZE === swipe.getNumSlides() && swipe.getPos() + 1 === swipe.getNumSlides()) {
+        // 最后一个答案以后尝试翻页
+        gotoNextPage()
+    } else {
+        swipe[$(this).data('type')]()
+    }
+}
+
+function gotoNextPage() {
+    let location = window.location
+    let search = location.search
+
+    if (search.indexOf('sort=created') === -1) {
+        return
+    }
+
+    let match = search.match(/page=(\d+)/)
+    let page = 1
+
+    if (match) {
+        page = Number(match[1]) + 1
+    } else {
+        page += 1
+    }
+
+    location.href = [
+        location.protocol,
+        '//',
+        location.host,
+        location.pathname,
+        `?sort=created&page=${page}`
+    ].join('')
 }
 
 function removeSlider() {
@@ -106,25 +145,42 @@ function showSlider() {
         items.push($(this).html())
     })
 
-    console.log(items)
-
     $('.mzh-swipe-wrap').html(sliderTemplate(items))
     $('.mzh-slider-box').show()
 
     setTimeout(function() {
         swipe = new Swipe(document.getElementById('mzh-slider'), {
           continuous: false,
-          callback: function(index, elem) {},
+          callback: function(index, elem) {
+              replaceImages(elem)
+          },
           transitionEnd: function(index, elem) {}
         });
     }, 100)
+}
+
+function replaceImages(elem) {
+    let $imgs = $(elem).find('img')
+
+    $imgs.each(function() {
+        let $img = $(this)
+
+        let src = $img.attr('src')
+        let source = $img.data('actualsrc')
+
+        if (src === source) {
+            return
+        }
+
+        $img.attr('src', source)
+    })
 }
 
 function modifyAnswerLinks() {
     $('a.question_link:not(.mzh)').each(function() {
         let $link = $(this)
         let linkArr = $link.attr('href').split('#')
-        let newLink = linkArr[0] + '?sort=created#' + (linkArr[1] || '')
+        let newLink = linkArr[0].replace(/\/answer\/(\d+)/, '') + '?sort=created#' + (linkArr[1] || '')
 
         $link.attr('href', newLink).addClass('mzh')
     });

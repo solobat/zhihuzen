@@ -2,6 +2,7 @@
 安静的知乎
 
 ### update
++ v1.6.1 优化slider
 + v1.6 slider阅读模式
 + v1.5.1 fix bug
 + v1.5 优化

@@ -11,7 +11,9 @@ $(function() {
             hideupdown: true,
             hideSidebar: true,
             hideComments: true,
-            sortByCreated: true
+            sortByCreated: true,
+            showSliderButton: true,
+            autoSlider: false
         };
         chrome.storage.local.get('options', function(data) {
             $.extend(options, data.options);
@@ -38,13 +40,17 @@ $(function() {
         var hideComments = $('#hideComments').get(0).checked;
         var hideSidebar = $('#hideSidebar').get(0).checked;
         var sortByCreated = $('#sortByCreated').get(0).checked;
+        var showSliderButton = $('#showSliderButton').get(0).checked;
+        var autoSlider = $('#autoSlider').get(0).checked;
 
         var data = {
             hidename: hidename,
             hideupdown: hideupdown,
             hideSidebar: hideSidebar,
             hideComments: hideComments,
-            sortByCreated: sortByCreated
+            sortByCreated: sortByCreated,
+            showSliderButton: showSliderButton,
+            autoSlider: autoSlider
         };
 
         save(data);
